@@ -7,36 +7,36 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
+
+<link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
     <style>
-       
-       
+
+        body { margin:0; padding:0; }
+
          body {
    margin: 0;
    padding: 0;
  }
- 
- 
+
  .top {
    position: absolute;
-   left: 0;
-   right: 0;
-   height: 92px;
+   top:0;
+   width:100%;
  }
- 
+
  #map {
    position: absolute;
-   left: 0;
-   top: 92px;
-   right: 0;
+   width: 100%;
+   top: 0;
    bottom: 0;
- }
- 
- .top {
-   background: #2874A6;
  }
  
  .left {
    background: black;
+ }
+ select{
+ 	display: inline;
+ 	vertical-align: text-bottom;
  }
 
     </style>
@@ -44,7 +44,8 @@
 <body>
 
 <div id='map'></div>
-<div class="top">
+<div class="top pad1 fill-blue dark">
+<h1  style='display:inline; margin-right: 10px'>Crash Data Analysis</h1>
   <select id='year' name="year">
     <option value="0">Year</option>
     <option value="2010">2010</option>
@@ -131,8 +132,9 @@
     <option value='Diamond Reo/Reo'>Diamond Reo/Reo</option>
     <option value='Freightliner'>Freightliner</option>
     <option value='FWD'>FWD</option>
-    <option value='International Harvester/Navistar'>International Harvester/Navistar</option>
-    <option value='Kenworth'>Kenworth</option>
+    <option value='Internationfinal Harvester/Navistar'>International Harvester/Navistar</option>
+   <option value='International Harvester/Navistar'>International Harvester/Navistar</option>
+   <option value='Kenworth'>Kenworth</option>
     <option value='Mack'>Mack</option>
     <option value='Peterbilt'>Peterbilt</option>
     <option value='Iveco/Magirus'>Iveco/Magirus</option>
@@ -164,7 +166,6 @@ document.getElementById('year').addEventListener('change', function(e) {
   console.log(yearValue);
   combinedFilters();
 
-  
 });
 
 
@@ -174,7 +175,7 @@ document.getElementById('make').addEventListener('change', function(e) {
   makeValue = this.value;
   console.log(makeValue);
   combinedFilters();
- 
+
 });
 
 function combinedFilters() {
