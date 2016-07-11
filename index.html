@@ -8,13 +8,13 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
     <style>
-        body { margin:0; padding:0; }
-        /*#map { position:absolute; top:0; bottom:0; width:100%; }*/
+       
+       
          body {
    margin: 0;
    padding: 0;
  }
- /* #map { position:absolute; top:0; bottom:0; width:100%; } */
+ 
  
  .top {
    position: absolute;
@@ -22,11 +22,6 @@
    right: 0;
    height: 92px;
  }
- /* .left {
-                    position:absolute;
-                    left:0; top:92px; bottom: 0;
-                    width: 178px;
-                }  */
  
  #map {
    position: absolute;
@@ -167,11 +162,9 @@ var yearValue, makeValue;
 document.getElementById('year').addEventListener('input', function(e) {
   yearValue = this.value;
   console.log(yearValue);
-  // map.setFilter('2010-2014final', ['==', 'year', parseInt(yearValue)]);
   combinedFilters();
 
-  // map.setFilter('2010-2014final', ['==', 'year', parseInt(value)]);
-
+  
 });
 
 
@@ -179,14 +172,9 @@ document.getElementById('year').addEventListener('input', function(e) {
 document.getElementById('make').addEventListener('input', function(e) {
 
   makeValue = this.value;
-  // var relatedFeatures = map.querySourceFeatures('2010-2014final', {
-  //           sourceLayer: '2010-2014final',
-  //           filter: ['in', 'COUNTY', feature.properties.COUNTY]
-  //       });
   console.log(makeValue);
   combinedFilters();
-  // map.setFilter('2010-2014', ['==', makeValue, 'yes']);
-
+ 
 });
 
 function combinedFilters() {
