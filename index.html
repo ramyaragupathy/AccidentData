@@ -152,14 +152,14 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicmFteWFyYWd1cGF0aHkiLCJhIjoiOHRoa2JJTSJ9.6Y38XMOQL80LZyrUAjXgIg';
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/ramyaragupathy/ciqhs7bu3002wc8marmigo218',
+  style: 'mapbox://styles/ramyaragupathy/ciqhzpkhb0036cenk01da5415',
   center: [-77.38, 39],
   zoom: 6,
   hash: true
 });
 var yearValue, makeValue;
 
-document.getElementById('year').addEventListener('input', function(e) {
+document.getElementById('year').addEventListener('change', function(e) {
   yearValue = this.value;
   console.log(yearValue);
   combinedFilters();
@@ -169,7 +169,7 @@ document.getElementById('year').addEventListener('input', function(e) {
 
 
 
-document.getElementById('make').addEventListener('input', function(e) {
+document.getElementById('make').addEventListener('change', function(e) {
 
   makeValue = this.value;
   console.log(makeValue);
