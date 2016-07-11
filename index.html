@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        /*#map { position:absolute; top:0; bottom:0; width:100%; }*/
+         body {
+   margin: 0;
+   padding: 0;
+ }
+ /* #map { position:absolute; top:0; bottom:0; width:100%; } */
+ 
+ .top {
+   position: absolute;
+   left: 0;
+   right: 0;
+   height: 92px;
+ }
+ /* .left {
+                    position:absolute;
+                    left:0; top:92px; bottom: 0;
+                    width: 178px;
+                }  */
+ 
+ #map {
+   position: absolute;
+   left: 0;
+   top: 92px;
+   right: 0;
+   bottom: 0;
+ }
+ 
+ .top {
+   background: #2874A6;
+ }
+ 
+ .left {
+   background: black;
+ }
+
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<div class="top">
+  <select id='year' name="year">
+    <option value="0">Year</option>
+    <option value="2010">2010</option>
+    <option value="2011">2011</option>
+    <option value="2012">2012</option>
+    <option value="2013">2013</option>
+    <option value="2014">2014</option>
+  </select>
+  <select id='make' name="make">
+    <option value="Make">Make</option>
+    <option value="Chevrolet">Chevrolet</option>
+    <option value="Toyota">Toyota</option>
+    <option value='American Motors'>American Motors</option> 
+    <option value='Jeep/Kaiser-Jeep/Willys Jeep'>Jeep</option>  
+    <option value='AM General'>AM General</option>
+    <option value='Chrysler'>Chrysler</option>  
+    <option value='Dodge'>Dodge</option>
+    <option value='Imperial'>Imperial</option>
+    <option value='Plymouth'>Plymouth</option> 
+    <option value='Eagle'>Eagle</option> 
+    <option value='Ford'>Ford</option> 
+    <option value='Lincoln'>Lincoln</option>
+    <option value='Mercury'>Mercury</option> 
+    <option value='Buick/Opel'>Opel</option>
+    <option value='Cadillac'>Cadillac</option>
+    <option value='Chevrolet'>Chevrolet</option>
+    <option value='Oldsmobile'>Oldsmobile</option>
+    <option value='Pontiac'>Pontiac</option> 
+    <option value='GMC'>GMC</option> 
+    <option value='Saturn'>Saturn</option> 
+    <option value='Grumman'>Grumman</option>
+    <option value='Coda'>Coda</option>
+    <option value='Other Domestic'>Other Domestic</option> 
+    <option value='Volkswagen'>Volkswagen</option>
+    <option value='Alfa Romeo'>Alfa Romeo</option> 
+    <option value='Audi'>Audi</option> 
+    <option value='Austin/Austin Healey'>Austin</option>
+    <option value='BMW'>BMW</option>
+    <option value='Datsun/Nissan'>Datsun/Nissan</option>
+    <option value='Fiat'>Fiat</option>
+    <option value='Honda'>Honda</option>
+    <option value='Isuzu'>Isuzu</option>
+    <option value='Jaguar'>Jaguar</option>, 
+    <option value='Lancia'>Lancia</option>
+    <option value='Mazda'>Mazda</option>
+    <option value='Mercedes-Benz'>Mercedes-Benz</option>
+    <option value='MG'>MG</option>
+    <option value='Peugeot'>Peugeot</option>
+    <option value='Porsche'>Porsche</option>
+    <option value='Renault'>Renault</option>
+    <option value='Saab'>Saab</option>
+    <option value='Subaru'>Subaru</option>
+    <option value='Toyota'>Toyota</option>
+    <option value='Triumph'>Triump</option>
+    <option value='Volvo'>Volvo</option> 
+    <option value='Mitsubishi'>Mitsubishi</option> 
+    <option value='Suzuki'>Suzuki</option>
+    <option value='Acura'>Acura</option>
+    <option value='Hyundai'>Hyundai</option>
+    <option value='Merkur'>Merkur</option>
+    <option value='Yugo'>Yugo</option>
+    <option value='Infiniti'>Infiniti</option>
+    <option value='Lexus'>Lexus</option>
+    <option value='Daihatsu'>Daihatsu</option>
+    <option value='Sterling'>Sterling</option>
+    <option value='Land Rover'>Land Rover</option>
+    <option value='Kia'>Kia</option>
+    <option value='Daewoo'>Daewoo</option>
+    <option value='Smart'>Smart</option>
+    <option value='Mahindra'>Mahindra</option>
+    <option value='Scion'>Scion</option>
+    <option value='Other Imports'>Other Imports</option>
+    <option value='BSA'>BSA</option>
+    <option value='Ducati'>Ducati</option>
+    <option value='Harley-Davidson'>Harley-Davidson</option>
+    <option value='Kawasaki'>Kawasaki</option>
+    <option value='Moto Guzzi'>Moto Guzzi</option>
+    <option value='Norton'>Norton</option>
+    <option value='Yamaha'>Yamaha</option>
+    <option value='Victory'>Victory</option> 
+    <option value='Other Make Moped'>Other Make Moped</option> 
+    <option value='Other Make Motored Cycle'>Other Make Motored Cycle</option>
+    <option value='Brockway'>Brockway</option> 
+    <option value='Diamond Reo/Reo'>Diamond Reo/Reo</option>
+    <option value='Freightliner'>Freightliner</option>
+    <option value='FWD'>FWD</option>
+    <option value='International Harvester/Navistar'>International Harvester/Navistar</option>
+    <option value='Kenworth'>Kenworth</option>
+    <option value='Mack'>Mack</option>
+    <option value='Peterbilt'>Peterbilt</option>
+    <option value='Iveco/Magirus'>Iveco/Magirus</option>
+    <option value='White/Autocar, White/GMC'>White/Autocar, White/GMC</option>
+    <option value='Bluebird'>Bluebird</option>
+    <option value='Eagle Coach'>Eagle Coach</option>
+    <option value='Gillig'>Gillig</option> 
+    <option value='MCI'>MCI</option>
+    <option value='Thomas Built'>Thomas Built</option>
+    <option value='Not Reported'>Not Reported</option>
+    <option value='Other Make'>Other Make</option>
+    <option value='Unknown Make'></option>
+
+  </select>
+  </div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoicmFteWFyYWd1cGF0aHkiLCJhIjoiOHRoa2JJTSJ9.6Y38XMOQL80LZyrUAjXgIg';
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/ramyaragupathy/ciqhs7bu3002wc8marmigo218',
+  center: [-77.38, 39],
+  zoom: 6,
+  hash: true
+});
+var yearValue, makeValue;
+
+document.getElementById('year').addEventListener('input', function(e) {
+  yearValue = this.value;
+  console.log(yearValue);
+  // map.setFilter('2010-2014final', ['==', 'year', parseInt(yearValue)]);
+  combinedFilters();
+
+  // map.setFilter('2010-2014final', ['==', 'year', parseInt(value)]);
+
+});
+
+
+
+document.getElementById('make').addEventListener('input', function(e) {
+
+  makeValue = this.value;
+  // var relatedFeatures = map.querySourceFeatures('2010-2014final', {
+  //           sourceLayer: '2010-2014final',
+  //           filter: ['in', 'COUNTY', feature.properties.COUNTY]
+  //       });
+  console.log(makeValue);
+  combinedFilters();
+  // map.setFilter('2010-2014', ['==', makeValue, 'yes']);
+
+});
+
+function combinedFilters() {
+  
+  if (makeValue != 'Make' && parseInt(yearValue) != 0) {
+    console.log('both inputs');
+    var new_Filter = ["all", ["==", 'year', parseInt(yearValue)],
+      ["==", makeValue,'yes']
+    ];
+    map.setFilter('2010-2014', new_Filter);
+  } else if (makeValue == 'Make' && parseInt(yearValue) != 0) {
+   console.log('year set');
+
+    var new_Filter = ["==", 'year', parseInt(yearValue)];
+    map.setFilter('2010-2014', new_Filter);
+  } else if (makeValue != 'Make' && parseInt(yearValue) == 0) {
+    console.log('make set');
+    var new_Filter = ["==", makeValue, 'yes'];
+    map.setFilter('2010-2014', new_Filter);
+  } else {
+
+  }
+}
+
+</script>
+
+</body>
+</html>
