@@ -1,5 +1,6 @@
 'use strict';
 var accidentJSON = require('./2010-14Intersections.json');
+var fatalities;
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicmFteWFyYWd1cGF0aHkiLCJhIjoiOHRoa2JJTSJ9.6Y38XMOQL80LZyrUAjXgIg';
 
@@ -12,10 +13,8 @@ var map = new mapboxgl.Map({
 
 var accident = new mapboxgl.GeoJSONSource({
     'type': 'geojson',
-    'data': accidentJSON,
-     cluster: true,
-     clusterMaxZoom: 22, // Max zoom to cluster points on
-     clusterRadius: 50
+    'data': accidentJSON
+    
 });
 
 // //what to do while loading map style
@@ -30,53 +29,62 @@ map.on('style.load', function () {
             visibility: 'visible'
         },
         'paint': {
-          'circle-color': 'red',
-          'circle-radius': 8,
-          'circle-opacity': .8, 
-          'circle-blur':2
+          'circle-color': {
+           property: 'fatalities',
+           stops: [
+              
+              [1, '#ffb1b1'],
+              [2,'#ff6262'],
+              [5, '#ff1414'],
+              [10, '#b10000']
+              
+
+            ]},
+         
+          'circle-radius': {
+           property: 'fatalities',
+           stops: [
+            [1,  6],
+            [2, 12],
+            [5, 20],
+            [10, 25],
+            [20, 30]
+  
+
+            
+           ]},
+           'circle-blur':1,
+           'circle-opacity':.8
+       
+          
       
         }
+       
+                 
     }); 
-    var layers = [
-        [150, 'red'],
-        [20, 'red'],
-        [1, 'red']
-    ];
-    var layerSize =[
-    [150, 18],
-    [20, 14],
-    [1, 10]
-    ];
-
-    layers.forEach(function (layer, i) {
-        map.addLayer({
-            "id": "cluster-" + i,
-            "type": "circle",
-            "source": "accidentSource",
-            "paint": {
-                "circle-color": layer[1],
-                "circle-radius": layerSize[i][1]
-            },
-            "filter": i === 0 ?
-                [">=", "point_count", layer[0]] :
-                ["all",
-                    [">=", "point_count", layer[0]],
-                    ["<", "point_count", layers[i - 1][0]]]
-        });
-    });
-
-    // Add a layer for the clusters' count labels
-    map.addLayer({
-        "id": "cluster-count",
-        "type": "symbol",
-        "source": "accidentSource",
-        "layout": {
-            "text-field": "{point_count}",
-            "text-font": [
-                "DIN Offc Pro Medium",
-                "Arial Unicode MS Bold"
-            ],
-            "text-size": 12
-        }
-    });
+    
 });
+var popup = new mapboxgl.Popup({
+    closeButton: true,
+    closeOnClick: true
+});
+map.on('click', function (e) {
+    var features = map.queryRenderedFeatures(e.point, {
+            layers: ['accident']
+        });
+    map.getCanvas().style.cursor = (features.length) ? 'pointer' : '';
+    if (!features.length) {
+        popup.remove();
+        return;
+    }
+
+
+          var popupHTML = 'Number of fatalities: ' + '<b>'+features[0].properties.fatalities +'</b>'+'</h5>';
+
+          popup = new mapboxgl.Popup()
+                .setLngLat(features[0].geometry.coordinates)
+                .setHTML(popupHTML)
+                .addTo(map);
+    
+});
+ 
