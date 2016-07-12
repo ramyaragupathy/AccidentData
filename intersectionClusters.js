@@ -15,7 +15,7 @@ var accident = new mapboxgl.GeoJSONSource({
     'data': accidentJSON,
      cluster: true,
      clusterMaxZoom: 22, // Max zoom to cluster points on
-     clusterRadius: 100
+     clusterRadius: 50
 });
 
 // //what to do while loading map style
@@ -40,7 +40,12 @@ map.on('style.load', function () {
     var layers = [
         [150, 'red'],
         [20, 'red'],
-        [0, 'red']
+        [1, 'red']
+    ];
+    var layerSize =[
+    [150, 18],
+    [20, 14],
+    [1, 10]
     ];
 
     layers.forEach(function (layer, i) {
@@ -50,7 +55,7 @@ map.on('style.load', function () {
             "source": "accidentSource",
             "paint": {
                 "circle-color": layer[1],
-                "circle-radius": 18
+                "circle-radius": layerSize[i][1]
             },
             "filter": i === 0 ?
                 [">=", "point_count", layer[0]] :
