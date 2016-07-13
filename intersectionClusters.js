@@ -65,7 +65,7 @@ map.on('style.load', function () {
            property: 'fatalities',
            stops: [
             [1,  6],
-            [2, 12],
+            [2, 10],
             [5, 20],
             [10, 25],
             [20, 30]
@@ -107,9 +107,9 @@ onemoremap.on('style.load', function () {
     }); 
 
     var layers = [
-        [150, '#f28cb1'],
-        [20, '#f1f075'],
-        [0, '#51bbd6']
+        [150, 'red'],
+        [20, 'red'],
+        [0, 'red']
     ];
 
     layers.forEach(function (layer, i) {
@@ -119,7 +119,8 @@ onemoremap.on('style.load', function () {
             "source": "accidentSource",
             "paint": {
                 "circle-color": layer[1],
-                "circle-radius": 18
+                "circle-radius": 20,
+                "circle-blur": 1
             },
             "filter": i === 0 ?
                 [">=", "point_count", layer[0]] :
