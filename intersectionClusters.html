@@ -10,17 +10,33 @@
  
     <style>
         body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #map { position: absolute;
+    right: 50%;
+    top: 0px;
+    bottom: 0px;
+    left: 0px; 
+    border: 1px solid white;}
+    #onemoremap{
+         position: absolute;
+    left: 50%;
+    bottom: 0px;
+    top: 0px;
+    right: 0px;
+    border: 1px solid white;
+    }
         .top {
 		   position: absolute;
 		   top:0;
 		   width:100%;
 		 }
+    }
     </style>
 </head>
 <body>
 
 <div id='map'></div>
+<div id='onemoremap'></div>
+
 <div class="top pad1 fill-blue dark">
 <h1  style='display:inline; margin-right: 10px'>Crashes at Intersections (2010-14)</h1>
 
