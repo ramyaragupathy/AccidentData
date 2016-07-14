@@ -11,13 +11,13 @@ module.exports = function (data, tile, writeData, done) {
         totalAccidents = data.accidents.accidents.features.length;
 
         data.accidents.accidents.features.forEach(function (accident) {
-            totalFatalities += accident.fatalities;
+            totalFatalities += accident.properties.fatalities;
         });
     }
 
     data.tampa.tampa.features.forEach(function (tampaFeature) {
         tampaFeature.properties.totalAccidents = totalAccidents;
-        tampaFeature.proeprties.totalFatalities = totalFatalities;
+        tampaFeature.properties.totalFatalities = totalFatalities;
     });
 
     writeData(data.tampa.tampa.features);
