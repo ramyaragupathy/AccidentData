@@ -15,11 +15,11 @@ module.exports = function (data, tile, writeData, done) {
         });
     }
 
-    data.tampa.tampa.features.forEach(function (tampaFeature) {
-        tampaFeature.properties.totalAccidents = totalAccidents;
-        tampaFeature.properties.totalFatalities = totalFatalities;
+    data.highways.highway.features.forEach(function (highwayFeature) {
+        highwayFeature.properties.totalAccidents = totalAccidents;
+        highwayFeature.properties.totalFatalities = totalFatalities;
     });
 
-    writeData(data.tampa.tampa.features);
+    writeData(data.highways.highway.features);
     done(null, null);
 };
