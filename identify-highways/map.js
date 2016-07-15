@@ -1,8 +1,8 @@
 'use strict';
 
-// var fs = require('fs');
-// var ff = require('feature-filter');
-// var featureCollection = require('turf-featurecollection');
+var cover = require('tile-cover');
+var tilebelt = require('tilebelt');
+var turf = require('@turf/turf');
 
 module.exports = function (data, tile, writeData, done) {
     var totalAccidents;
@@ -20,6 +20,26 @@ module.exports = function (data, tile, writeData, done) {
         highwayFeature.properties.totalFatalities = totalFatalities;
     });
 
-    writeData(data.highways.highway.features);
+
+    var tileHash = {};
+
+    data.highways.highway.features.forEach(function (feature) {
+        for (var z = 4; z <= 12; z++) {
+            var tiles = cover.tiles(feature.geometry, {'min_zoom': z, 'max_zoom': z});
+            tiles.forEach(function (tile) {
+                // convert tile to a string to use as a key
+                tileHash[tile.join('/')] = 1;
+            });
+        }
+    });
+
+    Object.keys(tileHash).forEach(function (key) {
+        // convert key back to a tile array
+        var tile = key.split('/').map(Number);
+        // convert tile to geojson geometry, then wrap in a geojson polygon feature
+        var box = turf.polygon(tilebelt.tileToGeoJSON(tile).coordinates);
+        writeData(JSON.stringify(box));
+    });
+    // writeData(data.highways.highway.features);
     done(null, null);
 };
