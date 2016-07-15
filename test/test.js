@@ -1,6 +1,6 @@
-var cover = require('tile-cover')
-var tilebelt = require('tilebelt')
-var turf = require('@turf/turf')
+var cover = require('tile-cover');
+var tilebelt = require('tilebelt');
+var turf = require('@turf/turf');
 
 var features = [
     {
@@ -65,22 +65,24 @@ var features = [
   ]
 
 // use a hashmap to keep tiles unique
-var tiles = {}
+var tileHash = {}
 
 features.forEach(function(feature){
   for(var z = 4; z <= 14; z++) {
     var tiles = cover.tiles(feature.geometry, {min_zoom: z, max_zoom: z})
     tiles.forEach(function(tile){
       // convert tile to a string to use as a key
-      tiles[tile.join('/')] = 1
-    })
+      tileHash[tile.join('/')] = 1
+    });
   }
-})
+});
 
-Object.keys(tiles).forEach(function(key){
+// console.log(tileHash);
+
+Object.keys(tileHash).forEach(function(key){
   // convert key back to a tile array
-  var tile = key.split('/').map(Number)
+  var tile = key.split('/').map(Number);
   // convert tile to geojson geometry, then wrap in a geojson polygon feature
   var box = turf.polygon(tilebelt.tileToGeoJSON(tile).coordinates)
   console.log(JSON.stringify(box))
-})
+});
