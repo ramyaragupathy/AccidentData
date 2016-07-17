@@ -1,0 +1,66 @@
+From 3c0c2a1eb57098b855bad4403fd37e9a998681bb Mon Sep 17 00:00:00 2001
+From: arunasank <aruna@mapbox.com>
+Date: Sun, 17 Jul 2016 20:43:39 +0000
+Subject: [PATCH 2/2] fix up some new code to get geojsons instead of mbtiles
+
+---
+ identify-highways/index.js      |  2 +-
+ identify-highways/map.js        | 19 ++++++-------------
+ identify-highways/tampa.mbtiles |  0
+ 3 files changed, 7 insertions(+), 14 deletions(-)
+ delete mode 100644 identify-highways/tampa.mbtiles
+
+diff --git a/identify-highways/index.js b/identify-highways/index.js
+index 7a938b6..8ec6a84 100755
+--- a/identify-highways/index.js
++++ b/identify-highways/index.js
+@@ -6,7 +6,7 @@ var path = require('path');
+ tileReduce({
+     zoom: 12,
+     map: path.join(__dirname, 'map.js'),
+-    sources: [{name: 'highways', mbtiles: '../highways.mbtiles'}, {name: 'accidents', mbtiles: '../accidents.mbtiles'}]
++    sources: [{name: 'osm', mbtiles: '../../osm-tag-stats/united_states_of_america.mbtiles'}]
+ })
+ .on('reduce', function (id) {
+ })
+diff --git a/identify-highways/map.js b/identify-highways/map.js
+index ae0c0dd..3a8263a 100644
+--- a/identify-highways/map.js
++++ b/identify-highways/map.js
+@@ -2,24 +2,17 @@
+ 
+ // var fs = require('fs');
+ // var ff = require('feature-filter');
+-// var featureCollection = require('turf-featurecollection');
++var turf = require('@turf/turf');
+ 
+ module.exports = function (data, tile, writeData, done) {
+     var totalAccidents;
+     var totalFatalities = 0;
+-    if (data.accidents.accidents.features) {
+-        totalAccidents = data.accidents.accidents.features.length;
+-
+-        data.accidents.accidents.features.forEach(function (accident) {
+-            totalFatalities += accident.properties.fatalities;
+-        });
+-    }
+-    data.highways.highways.features.forEach(function (highwayFeature) {
++    data.osm.osm.features.forEach(function (highwayFeature) {
+         if(highwayFeature.properties.highway == 'primary' || highwayFeature.properties.highway == 'primary_link' || highwayFeature.properties.highway == 'secondary' || highwayFeature.properties.highway == 'secondary_link' || highwayFeature.properties.highway == 'tertiary' || highwayFeature.properties.highway == 'tertiary_link' || highwayFeature.properties.highway == 'motorway' || highwayFeature.properties.highway == 'motorway_link') {
+-
+-        highwayFeature.properties.totalAccidents = totalAccidents;
+-        highwayFeature.properties.totalFatalities = totalFatalities;
+-        writeData(highwayFeature);
++        var highwayValue = highwayFeature.properties.highway;
++        highwayFeature.properties = {};
++        highwayFeature.properties.highway = highwayValue;
++        writeData(JSON.stringify(turf.featureCollection([highwayFeature]))+'\n');
+         }
+     });
+ 
+diff --git a/identify-highways/tampa.mbtiles b/identify-highways/tampa.mbtiles
+deleted file mode 100644
+index e69de29..0000000
+-- 
+1.9.1
+
