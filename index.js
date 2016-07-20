@@ -32,8 +32,33 @@ var light ={'1':'Daylight', '2':'Dark - not lighted', '3':'Dark-lighted', '4':'D
 var weather ={'1':'Clear', '2':'Rain', '3':'Sleet, Hail', '4':'Snow', '5':'Fog, Smog, Smoke',
               '6':'Severe Crosswinds', '7':'Blowing sand, Soil, Dirt','8':'Other','10':'Cloudy',
               '11':'Blowing Snow', '12':'Freezing Rain or Drizzle', '98':'Not Reported', '99':'Unknown'};
+var highwayClass ={'01':'Principal Arterial – Interstate', '02':'Principal Arterial – Other', '03':'Minor Arterial',
+                    '04':'Major Collector', '05':'Minor Collector', '06':'Local Road or Street','09':'Unknown',
+                    '11':'Principal Arterial – Interstate','12':'Principal Arterial – Other Freeways or Expressways',
+                    '13':'Other Principal Arterial','14':'Minor Arterial','15':'Collector','16':'Local Road or Street',
+                    '19':'Unknown','99': 'Unknown'};
+var firstEvent ={'01':'Rollover', '02':'Fire', '03':'Immersion', '04':'Gas inhalation', '05':'Fell from vehicle', 
+                  '06':'Injured in vehicle','07':'Other non-collision','08':'Pedestrian','09':'Pedalcyclist',
+                  '10':'Railway Vehicle','11':'Live Animal','12':'Motor vehicle in transport','14':'Parked motor vehicle',
+                  '15':'Non motorist on personal conveyance','16': 'Thrown/Falling object', '17':'Boulder', '19':'Building',
+                  '20':'Impact Attenuator/Crash Cushion', '21':'Bridge pier or support', '23':'Bridge rail', '24':'Guardrail face',
+                  '25':'Concrete Traffic Barrier', '26':'Other Traffic Barrier','30':'Utility pole/light support','32':'Culvert',
+                  '33':'Curb','34':'Ditch','35':'Embankment','38':'Fence','39':'Wall','40':'Fire hydrant','41':'Shrubbery','42':'Tree',
+                  '44':'Pavement Surface irregularity','45':'Working motor vehicle','46':'Traffic signal support','48':'Snow bank',
+                  '49':'Ridden Animal/Animal-Drawn Conveyance','50':'Bridge overhead structure','51':'Jackknife','52':'Guardrail End',
+                  '53':'Mailbox','54':'Motor Vehicle In-Transport Strikes or is Struck by Cargo, Persons or Objects Set-in-Motion from/by Another Motor Vehicle In-Transport',
+                  '55':'Motor Vehicle in Motion Outside the Trafficway','57':'Cable Barrier','58':'Ground','72':'Cargo/Equipment Loss or Shift',
+                  '73':'Object Fell From Motor Vehicle In-Transport','98':'Not Reported','99':'Unknown'};
 
-
+var mannerCollision={'1':'Front-to-Rear','2':'Front-to-Front','6':'Angle','7':'Sideswipe-Same direction',
+                     '8':'Sideswipe-Opposite direction','9':'Rear-to-Side','10':'Rear-to-Rear','11':'Other',
+                     '98':'Not Reported','99':'Unknown'};
+var speedRel={'0':'No','1':'Yes','2':'Yes, Racing', '3':'Exceeded speed limit','4':'Yes, too fast for conditions',
+              '5':'Yes specifics unknown','8':'No driver present/Unknown if driver present','9':'Unknown'};
+var avoidanceManeuver ={'0':'No driver present/Unknown if driver present','1':'No avoidance maneuver','2':'Braking (No Lockup)',
+                        '3':'Braking (Lockup)', '4':'Braking (Lockup Unknown', '5':'Releasing brakes','6':'Steering Left',
+                        '7':'Steering Right','8':'Braking & Steering left','9':'Braking & Steering right','10':'Accelerating',
+                        '11':'Accelerating & steering left','12':'Accelerating & steering right','98':'Other actions','99':'Unknown' };
 var accidentJSON ={
   'type': 'FeatureCollection',
   'features': []
@@ -60,29 +85,36 @@ accidentParser.on('record', function(record) {
   	// console.log('no geometry');
 
   } else {
+    if(record['TYP_INT']!=1)
+    {
   	// console.log('valid geometry');
     accidentFeatureJSON.geometry.coordinates[0] = record['LONGITUD'];
     accidentFeatureJSON.geometry.coordinates[1] = record['LATITUDE'];
     accidentFeatureJSON.properties['state'] = record['STATE'];
     accidentFeatureJSON.properties['crashNum'] = record['ST_CASE'];
-    accidentFeatureJSON.properties['date'] = record['DAY'] + '-' +record['MONTH']+'-'+ record['YEAR'];
-    accidentFeatureJSON.properties['day'] = day[record['DAY_WEEK']];
+    accidentFeatureJSON.properties['day'] = record['DAY'];
+    accidentFeatureJSON.properties['month'] = record['MONTH'];
+    accidentFeatureJSON.properties['year']=record['YEAR'];
+    accidentFeatureJSON.properties['weekday'] = day[record['DAY_WEEK']];
     accidentFeatureJSON.properties['hour'] = record['HOUR'];
     accidentFeatureJSON.properties['minute']=record['MINUTE'];
     accidentFeatureJSON.properties['time'] = record['HOUR']+':'+record['MINUTE'];
     accidentFeatureJSON.properties['fatalities'] = record['FATALS'];
-    accidentFeatureJSON.properties['vehicles involved'] = record['PVE_FORMS'];
-    accidentFeatureJSON.properties['make'] =[];
+    // accidentFeatureJSON.properties['vehicles involved'] = record['PVE_FORMS'];
+    // accidentFeatureJSON.properties['make'] =[];
     accidentFeatureJSON.properties['pedestrian'] = record['PEDS'];
     accidentFeatureJSON.properties['people not in vehicle'] =record['PERNOTMVIT'];
     accidentFeatureJSON.properties['people in vehicle']  = record['PERMVIT'];
-    accidentFeatureJSON.properties['highway function'] = record['ROAD_FNC'];
+    accidentFeatureJSON.properties['highway function'] = highwayClass[record['ROAD_FNC']];
     accidentFeatureJSON.properties['intersection'] = intersection[record['TYP_INT']];
-    accidentFeatureJSON.properties['highway name'] = [record['TWAY_ID'],record['TWAY_ID2']];
+    accidentFeatureJSON.properties['highway name'] = record['TWAY_ID']+","+record['TWAY_ID2'];
     accidentFeatureJSON.properties['light condition'] = light[record['LGT_COND']];
-    accidentFeatureJSON.properties['weather'] = [weather[record['WEATHER']],weather[record['WEATHER1']],weather[record['WEATHER2']]];
+    accidentFeatureJSON.properties['weather'] = weather[record['WEATHER']]+ ","+
+                                                weather[record['WEATHER1']]+","+
+                                                weather[record['WEATHER2']];
     accidentFeatureJSON.properties['drunk driver'] = record['DRUNK_DR'];
     accidentJSON.features.push(accidentFeatureJSON); 
+  }
   }
 
 });
@@ -96,7 +128,15 @@ vehicleParser.on('record', function(record) {
 
       // }
 
-     item.properties.make.push(vehicleMake[record['MAKE']]);
+     // item.properties.make.push(vehicleMake[record['MAKE']]);
+     // console.log(vehicleMake[record['MAKE']]);
+     item.properties[vehicleMake[record['MAKE']]] ='yes';
+     item.properties['vehicles involved'] =record['VE_FORMS'];
+     item.properties['first event'] = firstEvent[record['HARM_EV']];
+     item.properties['speed related'] = speedRel[record['SPEEDREL']];
+     item.properties['manner of collision'] = mannerCollision[record['MAN_COLL']];
+     item.properties['avoidance maneuver'] = avoidanceManeuver[record['P_CRASH3']];
+     
      item.properties['number of lanes'] = record['VNUM_LAN'];
      item.properties['vehicle'] = record['BODY_TYP'];
 
@@ -130,7 +170,7 @@ personParser.on('end', function(p) {
     // console.log('Finished parsing the dBase file');
     // console.log(JSON.stringify(vehicleJSON));
    
-    fs.writeFile(argv.year+'accident.geojson', JSON.stringify(accidentJSON));
+    fs.writeFile(argv.year+'intersectionOnly.geojson', JSON.stringify(accidentJSON, null, 4));
  
     // fs.writeFile(argv.year+'vehicle.geojson', JSON.stringify(vehicleJSON));
     
