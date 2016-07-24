@@ -151,6 +151,7 @@ ul li { cursor: pointer; }
 <div id="top">
      <span style="font-size:30px;cursor:pointer;padding:0" onclick="openNav()">☰</span>
      <h1 style="display:inline; padding:50px">Crash Data Analysis</h1>
+     <div style="display:inline; padding:50px" id='choices'></div>
 </div>
 
     <div id="mySidenav" class="sidenav">
@@ -166,24 +167,43 @@ ul li { cursor: pointer; }
                    Year
                     <ul>
                     
-                     <li><input type="checkbox" class="yearCheckList" value="2014" onchange="yearChoice(this)">2014</input></li>
-                     <li><input type="checkbox" class="yearCheckList" value="2013" onchange="yearChoice(this)">2013</input></li>
-                     <li><input type="checkbox" class="yearCheckList" value="2012" onchange="yearChoice(this)">2012</input></li>
-                     <li><input type="checkbox" class="yearCheckList" value="2011" onchange="yearChoice(this)">2011</input></li>
-                     <li><input type="checkbox" class="yearCheckList" value="2010" onchange="yearChoice(this)">2010</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2014" >2014</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2013" >2013</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2012" >2012</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2011" >2011</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2010" >2010</input></li>
                    
                     
                     </ul>
                 </li>
                  <li>
-                    Item B
+                    Intersection
+                    <ul>
+                    
+                     <li><input type="checkbox" class="intersectionCheckList" value="Four-Way Intersection" >Four-Way Intersection</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="T-Intersection" >T-Intersection</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="Y-Intersection" >Y-Intersection</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="Traffic Circle" >Traffic Circle</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="Roundabout" >Roundabout</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="Five-Point or More" >Five-Point or More</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="L-Intersection" >L-Intersection</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="Not Reported" >Not Reported</input></li>
+                     <li><input type="checkbox" class="intersectionCheckList" value="Unknown" >Unknown</input></li>
+                  
+                    
+                    </ul>
                 </li>
                 <li>
-                    Item C
+                    Highway Type
                     <ul>
-                        <li>
-                            Item C.1
-                        </li>
+                        
+                    <li><input type="checkbox" class="highwayCheckList" value="Principal Arterial – Interstate" >Principal Arterial – Interstate</input></li>
+                     <li><input type="checkbox" class="highwayCheckList" value="Principal Arterial – Other" >Principal Arterial – Other</input></li>
+                     <li><input type="checkbox" class="highwayCheckList" value="Minor Arterial" >Minor Arterial</input></li>
+                     <li><input type="checkbox" class="highwayCheckList" value="Major Collector" >Major Collector</input></li>
+                     <li><input type="checkbox" class="highwayCheckList" value="Minor Collector" >Minor Collector</input></li>
+                     <li><input type="checkbox" class="highwayCheckList" value="Local Road or Street" >Local Road or Street</input></li>
+                    
                         
                     </ul>
                 </li>
@@ -216,8 +236,6 @@ var lis = $('.listControl li').click(function(e){
     $(this).addClass("selected");    
 });
 
-var yearFilter = ["any"];
-var yearSelection =[];
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
@@ -235,26 +253,6 @@ function closeNav() {
 
 
 
-
-
-function setYearFilter(year){
-    console.log(parseInt(document.getElementById(year).innerText));
-    
-    yearFilter.push(["==","year", parseInt(document.getElementById(year).innerText)]);
-    console.log(yearFilter.length);
-    console.log(yearFilter);
-
-}
-
-function addToFilter(elementID){
-  alert(document.getElementById(elementID).innerText);
-  filters = ["any",
-     ["==","year", 2010],
-     // ["==","year", 2011]
-    ];
-  map.setFilter('2010-14intersectionOnly',['all',filters]);
-  console.log(map.getFilter('2010-14intersectionOnly'));
-}
 
 $('#expandList')
     .unbind('click')
@@ -294,10 +292,48 @@ $(function prepareList() {
 });
 $('#submit').on('click', function() {
 
-    var checkboxValues = $('.yearCheckList:checked').map(function() {
+    var yearSelection = $('.yearCheckList:checked').map(function() {
     return $(this).val();
     }).get();
-    console.log(checkboxValues);
+    console.log(yearSelection);
+    var intersectionSelection = $('.intersectionCheckList:checked').map(function() {
+    return $(this).val();
+    }).get();
+    console.log(intersectionSelection);
+    var highwaySelection = $('.highwayCheckList:checked').map(function() {
+    return $(this).val();
+    }).get();
+
+    var yearFilter =["any"];
+    var intersectionFilter =["any"];
+    var highwayFilter =["any"];
+    var displayChoiceContent='Displaying crash points for ';
+
+    console.log(highwaySelection);
+    var displayChoice = document.getElementById('choices');
+    if (yearSelection.length>0){
+      yearSelection.forEach(function(item, index){
+        yearFilter.push(["==","year",parseInt(item)]);
+        displayChoiceContent = displayChoiceContent + ' ' +item;
+      });
+    }
+    if(intersectionSelection.length>0){
+      intersectionSelection.forEach(function(item, index){
+        intersectionFilter.push(["==","intersection",item]);
+        displayChoiceContent = displayChoiceContent + ' ' +item;
+      });
+   }
+   if(highwaySelection.length>0){
+      highwaySelection.forEach(function(item, index){
+        highwayFilter.push(["==","highway function",item]);
+        displayChoiceContent = displayChoiceContent + ' ' +item;
+      });
+   }
+    var combinedFilters =["all",yearFilter,intersectionFilter,highwayFilter];
+    console.log(combinedFilters);
+    displayChoice.innerHTML = displayChoiceContent;
+    map.setFilter('2010-14intersectionOnly',combinedFilters);
+
 
 });
 
