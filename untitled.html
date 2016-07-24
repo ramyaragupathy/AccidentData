@@ -1,0 +1,343 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css' rel='stylesheet' />
+   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
+ 
+    <style>
+
+    /*.top {
+        position:absolute;
+        left:0; right:0;
+        height: 92px;
+    }*/
+    /*.left {
+        position:absolute;
+        left:0; top:92px; bottom: 0;
+        width: 178px;
+    }*/
+   /* .main {
+        position: absolute;
+        left:178px; top:92px; right:0; bottom:0;
+    }*/
+   
+    
+body {
+   margin: 0;
+   padding: 0;
+ }
+ #top {
+        position:absolute;
+        left:0; right:0;
+        height: 50px;
+        display: inherit;
+    }
+    .sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    /*padding-top: 60px;*/
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+.closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px !important;
+    margin-left: 50px;
+}
+
+#top { background: transparent; }
+.left { background: red; }
+#map { /*background: yellow;*/ 
+        transition: margin-left .5s;
+        /*padding: 16px;*/
+    position: absolute;
+  left:0; top:50px; right:0; bottom:0;}
+.expList ul, li {
+    list-style: none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+}
+#expList p {
+    margin:0;
+    display:block;
+}
+#expList p:hover {
+    background-color:#121212;
+}
+#expList li {
+    line-height:140%;
+    text-indent:0px;
+    background-position: 1px 8px;
+    padding-left: 20px;
+    background-repeat: no-repeat;
+}
+
+/* Collapsed state for list element */
+/*#expList .collapsed {
+    background-image: url(../img/collapsed.png);
+}*/
+/* Expanded state for list element
+/* NOTE: This class must be located UNDER the collapsed one */
+/*#expList .expanded {
+    background-image: url(../img/expanded.png);
+}*/
+#expList {
+    clear: both;
+}
+
+.listControl{
+  margin-bottom: 15px;
+}
+.listControl a {
+    border: 1px solid #555555;
+    color: #555555;
+    cursor: pointer;
+    height: 1.5em;
+    line-height: 1.5em;
+    margin-right: 5px;
+    padding: 4px 10px;
+}
+.listControl a:hover {
+    background-color:#555555;
+    color:#222222; 
+    font-weight:normal;
+}
+/*.selected {
+    background: #222;
+    /*color: #fff;*/
+}*/
+.submit{
+    left: 100px;
+}
+ul li { cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+<div id="top">
+     <span style="font-size:30px;cursor:pointer;padding:0" onclick="openNav()">☰</span>
+     <h1 style="display:inline; padding:50px">Crash Data Analysis</h1>
+</div>
+
+    <div id="mySidenav" class="sidenav">
+    <h1>FILTERS</h1>
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+   
+  <div class="listControl">
+               <!--  <a id="expandList">Expand All</a>
+                <a id="collapseList">Collapse All</a> -->
+           
+            <ul id="expList" >
+                <li id="year">
+                   Year
+                    <ul>
+                    <!-- <fieldset id="yearCheckList"> -->
+                     <li><input type="checkbox"  id="2014" onchange="yearChoice('2014')">2014</input></li>
+                     <li><input type="checkbox"  id="2013" onchange="yearChoice('2013')">2013</input></li>
+                     <li><input type="checkbox"  id="2012" onchange="yearChoice('2012')">2012</input></li>
+                     <li><input type="checkbox"  id="2011" onchange="yearChoice('2011')">2011</input></li>
+                     <li><input type="checkbox"  id="2010" onchange="yearChoice('2010')">2010</input></li>
+                   <!-- </fieldset> -->
+                    
+                    </ul>
+                </li>
+                 <li>
+                    Item B
+                </li>
+                <li>
+                    Item C
+                    <ul>
+                        <li>
+                            Item C.1
+                        </li>
+                        
+                    </ul>
+                </li>
+            </ul>
+             </div>
+            
+<a href='#' id='submit' class='button'>Submit</a>
+</div>
+
+
+<div id="map">
+    
+
+</div>
+
+ <script>
+ mapboxgl.accessToken = 'pk.eyJ1IjoicmFteWFyYWd1cGF0aHkiLCJhIjoiOHRoa2JJTSJ9.6Y38XMOQL80LZyrUAjXgIg';
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/ramyaragupathy/cir0c6b01000lccm5af92l7e9',
+  center: [-77.38, 39],
+  zoom: 6,
+  hash: true
+});
+var lis = $('.listControl li').click(function(e){
+    if(!e.metaKey) {
+        
+         lis.removeClass("selected");      
+    }
+    $(this).addClass("selected");    
+});
+
+var yearFilter = ["any"];
+var yearSelection =[];
+
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+    document.getElementById("map").style.marginLeft = "250px";
+    document.getElementById("top").style.marginLeft = "250px";
+    document.body.style.backgroundColor = "rgba(0,0,0,0)";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("map").style.marginLeft= "0";
+    document.getElementById("top").style.marginLeft= "0";
+    document.body.style.backgroundColor = "white";
+}
+
+ function yearChoice(year) {
+
+            if (document.getElementById(year).checked) {
+                if(yearFilter.length>1){
+                    yearFilter.forEach(function(item,index){
+                       if(item[2] == year){
+                         console.log("already added to filter");
+                         console.log(yearFilter);
+                       } else{
+                        }
+
+
+                    });
+
+                } else{
+
+                    yearFilter.push(["==","year", year]);
+                    console.log(yearFilter);
+                }
+               
+            }
+            else {
+                if(yearFilter.length>1){
+                    yearFilter.forEach(function(item,index){
+                       if(item[2] == year){
+                         
+                       console.log("element unchecked but filter present");
+                       yearFilter.splice(index,1);
+                       console.log(yearFilter);
+
+                       } 
+
+
+                    });
+
+                }
+               
+            }
+        }
+
+
+
+function setYearFilter(year){
+    console.log(parseInt(document.getElementById(year).innerText));
+    
+    yearFilter.push(["==","year", parseInt(document.getElementById(year).innerText)]);
+    console.log(yearFilter.length);
+    console.log(yearFilter);
+
+}
+
+function addToFilter(elementID){
+  alert(document.getElementById(elementID).innerText);
+  filters = ["any",
+     ["==","year", 2010],
+     // ["==","year", 2011]
+    ];
+  map.setFilter('2010-14intersectionOnly',['all',filters]);
+  console.log(map.getFilter('2010-14intersectionOnly'));
+}
+
+$('#expandList')
+    .unbind('click')
+    .click( function() {
+        $('.collapsed').addClass('expanded');
+        $('.collapsed').children().show('medium');
+    })
+    $('#collapseList')
+    .unbind('click')
+    .click( function() {
+        $('.collapsed').removeClass('expanded');
+        $('.collapsed').children().hide('medium');
+    })
+$(function prepareList() {
+    $('#expList').find('li:has(ul)').unbind('click').click(function(event) {
+        if(this == event.target) {
+            $(this).toggleClass('expanded');
+            $(this).children('ul').toggle('medium');
+        }
+        // return false;
+    }).addClass('collapsed').removeClass('expanded').children('ul').hide();
+ 
+    //Hack to add links inside the cv
+    $('#expList a').unbind('click').click(function() {
+        window.open($(this).attr('href'));
+        // return false;
+    });
+    //Create the button functionality
+    $('#expandList').unbind('click').click(function() {
+        $('.collapsed').addClass('expanded');
+        $('.collapsed').children().show('medium');
+    })
+    $('#collapseList').unbind('click').click(function() {
+        $('.collapsed').removeClass('expanded');
+        $('.collapsed').children().hide('medium');
+    })
+});
+$('#submit').on('click', function() {
+
+    var atLeastOneIsChecked = $('#yearCheckList:checkbox:checked').length > 0;
+    console.log(atLeastOneIsChecked);
+
+});
+
+</script>
+
+</body>
+</html>
