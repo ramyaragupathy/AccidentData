@@ -165,13 +165,13 @@ ul li { cursor: pointer; }
                 <li id="year">
                    Year
                     <ul>
-                    <!-- <fieldset id="yearCheckList"> -->
-                     <li><input type="checkbox"  id="2014" onchange="yearChoice('2014')">2014</input></li>
-                     <li><input type="checkbox"  id="2013" onchange="yearChoice('2013')">2013</input></li>
-                     <li><input type="checkbox"  id="2012" onchange="yearChoice('2012')">2012</input></li>
-                     <li><input type="checkbox"  id="2011" onchange="yearChoice('2011')">2011</input></li>
-                     <li><input type="checkbox"  id="2010" onchange="yearChoice('2010')">2010</input></li>
-                   <!-- </fieldset> -->
+                    
+                     <li><input type="checkbox" class="yearCheckList" value="2014" onchange="yearChoice(this)">2014</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2013" onchange="yearChoice(this)">2013</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2012" onchange="yearChoice(this)">2012</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2011" onchange="yearChoice(this)">2011</input></li>
+                     <li><input type="checkbox" class="yearCheckList" value="2010" onchange="yearChoice(this)">2010</input></li>
+                   
                     
                     </ul>
                 </li>
@@ -233,45 +233,7 @@ function closeNav() {
     document.body.style.backgroundColor = "white";
 }
 
- function yearChoice(year) {
 
-            if (document.getElementById(year).checked) {
-                if(yearFilter.length>1){
-                    yearFilter.forEach(function(item,index){
-                       if(item[2] == year){
-                         console.log("already added to filter");
-                         console.log(yearFilter);
-                       } else{
-                        }
-
-
-                    });
-
-                } else{
-
-                    yearFilter.push(["==","year", year]);
-                    console.log(yearFilter);
-                }
-               
-            }
-            else {
-                if(yearFilter.length>1){
-                    yearFilter.forEach(function(item,index){
-                       if(item[2] == year){
-                         
-                       console.log("element unchecked but filter present");
-                       yearFilter.splice(index,1);
-                       console.log(yearFilter);
-
-                       } 
-
-
-                    });
-
-                }
-               
-            }
-        }
 
 
 
@@ -332,8 +294,10 @@ $(function prepareList() {
 });
 $('#submit').on('click', function() {
 
-    var atLeastOneIsChecked = $('#yearCheckList:checkbox:checked').length > 0;
-    console.log(atLeastOneIsChecked);
+    var checkboxValues = $('.yearCheckList:checked').map(function() {
+    return $(this).val();
+    }).get();
+    console.log(checkboxValues);
 
 });
 
