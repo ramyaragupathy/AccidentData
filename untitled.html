@@ -303,33 +303,38 @@ $('#submit').on('click', function() {
     var highwaySelection = $('.highwayCheckList:checked').map(function() {
     return $(this).val();
     }).get();
-
-    var yearFilter =["any"];
-    var intersectionFilter =["any"];
-    var highwayFilter =["any"];
-    var displayChoiceContent='Displaying crash points for ';
-
     console.log(highwaySelection);
+   
+    
+    var displayChoiceContent='Displaying crash points for ';
+    var combinedFilters =["all"];
+
     var displayChoice = document.getElementById('choices');
     if (yearSelection.length>0){
+      var yearFilter =["any"];
       yearSelection.forEach(function(item, index){
         yearFilter.push(["==","year",parseInt(item)]);
         displayChoiceContent = displayChoiceContent + ' ' +item;
       });
+      combinedFilters.push(yearFilter);
     }
     if(intersectionSelection.length>0){
+      var intersectionFilter =["any"];
       intersectionSelection.forEach(function(item, index){
         intersectionFilter.push(["==","intersection",item]);
         displayChoiceContent = displayChoiceContent + ' ' +item;
       });
+      combinedFilters.push(intersectionFilter);
    }
    if(highwaySelection.length>0){
+      var highwayFilter =["any"];
       highwaySelection.forEach(function(item, index){
         highwayFilter.push(["==","highway function",item]);
         displayChoiceContent = displayChoiceContent + ' ' +item;
       });
+      combinedFilters.push(highwayFilter);
    }
-    var combinedFilters =["all",yearFilter,intersectionFilter,highwayFilter];
+
     console.log(combinedFilters);
     displayChoice.innerHTML = displayChoiceContent;
     map.setFilter('2010-14intersectionOnly',combinedFilters);
