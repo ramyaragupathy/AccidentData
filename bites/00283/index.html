@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Accident data across US</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.21.0/mapbox-gl.css' rel='stylesheet' />
+
+    <link href='./map.css' rel='stylesheet' />
+    <style>
+    
+    </style>
+</head>
+
+<body >
+<div id='map' class='map'></div>
+
+
+<div id='sidebar' class='map-overlay top' style="display:none">
+    <div class='map-overlay-inner'>
+      <h2 class='block space-bottom1'>Accident across US</h2>
+      <h3>Click on the map to see accidents in your neighbourhood.</h3>
+
+        <label id='slider-label'><span>Drag to increase or decrease the spotlight:</span>
+        <input id='slider' type='range' min='1' max='15' step='1' value='1' /></label>
+
+        <div id ='accidentSummary'>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<div class='sidebar pin-topright z10 pad1'>
+    <div class='sidebar-inner fill-white  round pad2y'>
+      <header class='pad2x space-bottom1'>
+       <ul>
+       <li><span class="legend-dot i4"></span>Four Way Intersection</li>
+       <li><span class="legend-dot t4"></span>T Intersection</li>
+       <li><span class="legend-dot y4"></span>Y Intersection</li>
+       <li><span class="legend-dot o4"></span>Other Intersection Types</li>
+       <li><span class="legend-dot n4"></span>Not an Intersection</li>
+       </ul>
+      </header>
+    </div>
+  </div>
+
+
+
+
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.21.0/mapbox-gl.js'></script>
+<script src="//api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js"></script>
+<script src="./map.js"></script>
+
+</html>
