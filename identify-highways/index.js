@@ -6,7 +6,8 @@ var path = require('path');
 tileReduce({
     zoom: 12,
     map: path.join(__dirname, 'map.js'),
-    sources: [{name: 'highways', mbtiles: '../highways.mbtiles'}, {name: 'accidents', mbtiles: '../accidents.mbtiles'}]
+    sources: [{name: 'farms', mbtiles: 'yodahe.mbtiles'},
+              {name: 'counties', mbtiles: 'counties.mbtiles'}]
 })
 .on('reduce', function (id) {
 })
